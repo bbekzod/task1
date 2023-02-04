@@ -1,0 +1,33 @@
+- hosts: all
+  tasks:
+  - name: install the latest version of Apache
+    yum:
+      name: httpd
+      state: latest
+
+  - name: Start service httpd, if not started
+    service:
+      name: httpd
+      state: started 
+      enabled: yes
+
+  - name: Install wget and unzip
+    yum:
+      name: "{{ packages }}"
+    vars:
+      packages:
+      - wget
+      - unzip    
+      
+  - name: Download and extract Template
+    unarchive:
+      src: https://www.free-css.com/assets/files/free-css-templates/download/page6/beauty-secrets.zip
+      dest: /tmp/
+      remote_src: yes
+    
+  - name: Copy a "sudoers" file on the remote machine for editing
+    copy:
+      src: /tmp/beauty-secrets
+      dest: /var/www/html/
+      remote_src: yes
+        
